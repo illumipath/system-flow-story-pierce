@@ -25,36 +25,41 @@ export const INSUFFICIENT_POPULATION_MARKER = "insufficient_population";
 export const PRIMARY_SUPPRESSION_MARKER = "*";
 export const SECONDARY_SUPPRESSION_MARKER = "**";
 
-// Pierce County fork (illumipath/system-flow-story-pierce), modified 2026-10-07: when this page is shown in a frame by a
-// page on the same site (Pierce County's C4F0 space shows it that way), that page
-// hands over the data files instead of them being fetched from data/. This page
-// posts {type: "sfs:ready"} to its parent and takes {type: "sfs:data", files} back,
-// where files maps each file name used below to its parsed contents. Opened on its
-// own, or with no answer within 10 seconds, it fetches data/ exactly as upstream.
-let hostFiles = null;
-function filesFromHost() {
-  if (typeof window === "undefined" || window.parent === window) return null;
-  if (!hostFiles) {
-    hostFiles = new Promise((resolve) => {
-      const done = (files) => { window.removeEventListener("message", onMessage); clearTimeout(timer); resolve(files); };
-      const onMessage = (e) => {
-        if (e.source !== window.parent || e.origin !== window.location.origin) return;
-        if (e.data?.type !== "sfs:data" || !e.data.files || typeof e.data.files !== "object") return;
-        done(e.data.files);
-      };
-      const timer = setTimeout(() => done(null), 10000);
-      window.addEventListener("message", onMessage);
-      window.parent.postMessage({ type: "sfs:ready" }, window.location.origin);
-    });
-  }
-  return hostFiles;
+// Pierce County fork (illumipath/system-flow-story-pierce), modified 2026-10-07:
+// when this page is shown in a frame by a page on the same site (Pierce County's
+// C4F0 space shows it that way), it asks that page for each data file instead of
+// fetching data/. It posts {type: "sfs:get", id, path}; the page answers
+// {type: "sfs:file", id, ok, data} or {..., ok: false, error}. Files are asked for
+// only when needed, as upstream fetches them. Opened on its own, or with no answer
+// within 60 seconds, it fetches data/ exactly as upstream does.
+const framed = typeof window !== "undefined" && window.parent !== window;
+const pending = new Map();
+let nextId = 0;
+if (framed) {
+  window.addEventListener("message", (e) => {
+    if (e.source !== window.parent || e.origin !== window.location.origin) return;
+    const m = e.data;
+    if (m?.type !== "sfs:file" || !pending.has(m.id)) return;
+    const { resolve, reject, timer } = pending.get(m.id);
+    pending.delete(m.id);
+    clearTimeout(timer);
+    if (m.ok) resolve(m.data);
+    else reject(new Error(`Failed to load ${m.path ?? "file"}: ${m.error ?? "not provided"}`));
+  });
+}
+function fromHost(path) {
+  return new Promise((resolve, reject) => {
+    const id = ++nextId;
+    const timer = setTimeout(() => { pending.delete(id); resolve(undefined); }, 60000);
+    pending.set(id, { resolve, reject, timer });
+    window.parent.postMessage({ type: "sfs:get", id, path }, window.location.origin);
+  });
 }
 
 async function fetchJson(path) {
-  const files = await filesFromHost();
-  if (files) {
-    if (!(path in files)) throw new Error(`Failed to load ${path}: not provided`);
-    return files[path];
+  if (framed) {
+    const data = await fromHost(path);
+    if (data !== undefined) return data;
   }
   const res = await fetch(`${BASE}data/${path}`);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);

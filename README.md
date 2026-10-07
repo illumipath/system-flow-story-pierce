@@ -4,9 +4,11 @@
 > The dashboard's design, charts, wording and methodology are KCRHA's; credit belongs to them.
 >
 > **Changes from upstream (2026-10-07, illumipath):**
-> - `src/lib/loadData.js`: when the page is shown in a frame by a page on the same site, it takes its
->   data files from that page (`sfs:ready` / `sfs:data` messages) instead of fetching `data/`. Opened on
->   its own it behaves exactly as upstream.
+> - `src/lib/loadData.js`: when the page is shown in a frame by a page on the same site, it asks that
+>   page for each data file (`sfs:get` / `sfs:file` messages) instead of fetching `data/`. Opened on its
+>   own it behaves exactly as upstream.
+> - `src/App.jsx`: a breakdown whose categories come from the data but has none (gender alignment, which
+>   Pierce County's HUD FY2026 export does not carry) is not offered.
 > - `src/App.jsx`, `index.html`: "Pierce County" where the page names the place, and a credit line
 >   under the title.
 > - `src/components/sections/CapacitySection.jsx`: King County's conclusions about its own capacity
