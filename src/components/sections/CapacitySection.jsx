@@ -120,17 +120,9 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
         <CapacityUnitsChart rows={unitsRows} />
       </div>
       <p className="chart-note">Permanent Housing figures here don't include Rapid Re-Housing capacity.</p>
+      {/* Pierce County fork (illumipath/system-flow-story-pierce), modified 2026-10-07: King County's conclusions and KCRHA links removed; they describe King County's data. */}
       <p className="chart-analysis">
-        King County's homelessness response system <strong>relies primarily on Permanent Housing</strong> as a
-        strategy for ending homelessness, and that's reflected here. See the{" "}
-        <a href="https://kcrha.org/community-data/system-performance/" target="_blank" rel="noreferrer">
-          System Performance Dashboard
-        </a>{" "}
-        for more on performance by program type, or the{" "}
-        <a href="https://kcrha.org/find-services/regional-services-database/" target="_blank" rel="noreferrer">
-          Regional Services Dashboard
-        </a>{" "}
-        for details on program attributes.
+        The mix of project types shows which strategies the homelessness response system leans on to end homelessness.
       </p>
 
       <p className="section-subhead">How full is that capacity, quarter by quarter over the last three years?</p>
@@ -139,14 +131,8 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
       </div>
       <p className="chart-note">Permanent Housing figures here don't include Rapid Re-Housing capacity.</p>
       <p className="chart-analysis">
-        Utilization near 100% means a project type has little room left, and across time periods and project types,{" "}
-        <strong>utilization stays consistently high, generally above 80%</strong>. That helps explain why the number
-        of people active in the system stays fairly consistent: resources are running near capacity. For more, see
-        the{" "}
-        <a href="https://kcrha.org/community-data/system-performance/" target="_blank" rel="noreferrer">
-          System Performance Dashboard
-        </a>
-        .
+        Utilization near 100% means a project type has little room left. When resources run near capacity, the number
+        of people active in the system tends to stay high, because there is little room to move people through.
       </p>
 
       <p className="section-subhead">Of everyone served by each project type in {year}, what share exited?</p>
@@ -159,11 +145,7 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
         <strong>shelter and transitional programs succeed when people move through</strong> toward something more
         stable (a higher share exiting). This is related to length of stay, but different: throughput measures
         everyone served within a single year, while length of stay is measured per person across their whole time in
-        the program, which may start or end outside that year's window. For length-of-stay analysis, see the{" "}
-        <a href="https://kcrha.org/community-data/system-performance/" target="_blank" rel="noreferrer">
-          System Performance Dashboard
-        </a>
-        .
+        the program, which may start or end outside that year's window.
       </p>
     </section>
   );

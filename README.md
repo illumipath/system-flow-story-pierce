@@ -1,3 +1,24 @@
+> **Pierce County fork.** This is the King County Regional Homelessness Authority's
+> [System Flow Story](https://github.com/KCRHA/system-flow-story), adapted for Pierce County's
+> Communities for Functional Zero (C4F0) team and used under the GNU GPL-3.0 (see `LICENSE`).
+> The dashboard's design, charts, wording and methodology are KCRHA's; credit belongs to them.
+>
+> **Changes from upstream (2026-10-07, illumipath):**
+> - `src/lib/loadData.js`: when the page is shown in a frame by a page on the same site, it takes its
+>   data files from that page (`sfs:ready` / `sfs:data` messages) instead of fetching `data/`. Opened on
+>   its own it behaves exactly as upstream.
+> - `src/App.jsx`, `index.html`: "Pierce County" where the page names the place, and a credit line
+>   under the title.
+> - `src/components/sections/CapacitySection.jsx`: King County's conclusions about its own capacity
+>   data, and links to KCRHA's dashboards, removed; the explanations stay.
+> - `src/styles/layout.css`: style for the credit line.
+> - `vite.config.js`: `SFS_BASE` sets the base path for a build served from another path.
+>
+> The data files Pierce's dashboard shows are made from Pierce County's HMIS export by separate
+> software; nothing in this repository reads client-level data. The `public/data` files here are
+> still KCRHA's King County data from upstream, and the GitHub workflows are upstream's; they are not
+> run from this fork.
+
 # KCRHA System Flow Dashboard
 
 A scrollytelling dashboard about homelessness system flow in King County —

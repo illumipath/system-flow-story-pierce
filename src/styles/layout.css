@@ -15,6 +15,13 @@
   color: var(--text-dark);
 }
 
+/* Pierce County fork (illumipath/system-flow-story-pierce), modified 2026-10-07:
+   the credit line under the title. */
+.hero p.fork-credit {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
 .section {
   padding: 2rem 1.5rem 4rem;
   max-width: 1100px;

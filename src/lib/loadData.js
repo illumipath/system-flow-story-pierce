@@ -25,7 +25,37 @@ export const INSUFFICIENT_POPULATION_MARKER = "insufficient_population";
 export const PRIMARY_SUPPRESSION_MARKER = "*";
 export const SECONDARY_SUPPRESSION_MARKER = "**";
 
+// Pierce County fork (illumipath/system-flow-story-pierce), modified 2026-10-07: when this page is shown in a frame by a
+// page on the same site (Pierce County's C4F0 space shows it that way), that page
+// hands over the data files instead of them being fetched from data/. This page
+// posts {type: "sfs:ready"} to its parent and takes {type: "sfs:data", files} back,
+// where files maps each file name used below to its parsed contents. Opened on its
+// own, or with no answer within 10 seconds, it fetches data/ exactly as upstream.
+let hostFiles = null;
+function filesFromHost() {
+  if (typeof window === "undefined" || window.parent === window) return null;
+  if (!hostFiles) {
+    hostFiles = new Promise((resolve) => {
+      const done = (files) => { window.removeEventListener("message", onMessage); clearTimeout(timer); resolve(files); };
+      const onMessage = (e) => {
+        if (e.source !== window.parent || e.origin !== window.location.origin) return;
+        if (e.data?.type !== "sfs:data" || !e.data.files || typeof e.data.files !== "object") return;
+        done(e.data.files);
+      };
+      const timer = setTimeout(() => done(null), 10000);
+      window.addEventListener("message", onMessage);
+      window.parent.postMessage({ type: "sfs:ready" }, window.location.origin);
+    });
+  }
+  return hostFiles;
+}
+
 async function fetchJson(path) {
+  const files = await filesFromHost();
+  if (files) {
+    if (!(path in files)) throw new Error(`Failed to load ${path}: not provided`);
+    return files[path];
+  }
   const res = await fetch(`${BASE}data/${path}`);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
   return res.json();

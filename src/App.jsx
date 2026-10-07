@@ -188,12 +188,19 @@ export default function App() {
   return (
     <div>
       <header className="hero">
-        <h1>King County's Homelessness System Flow</h1>
+        <h1>Pierce County's Homelessness System Flow</h1>
+        {/* Pierce County fork (illumipath/system-flow-story-pierce), modified 2026-10-07: place name, and credit to the original. */}
+        <p className="fork-credit">
+          Built on the King County Regional Homelessness Authority's{" "}
+          <a href="https://github.com/KCRHA/system-flow-story" target="_blank" rel="noreferrer">System Flow Story</a>,
+          adapted for Pierce County and used under the GPL-3.0 license.{" "}
+          <a href="https://github.com/illumipath/system-flow-story-pierce" target="_blank" rel="noreferrer">Source code</a>.
+        </p>
       </header>
       <section className="section intro-section">
         <p>
           Data is one of our most powerful tools for ending homelessness. This dashboard follows how people move
-          into, through, and out of King County's homelessness response system: who enters, who's active, who
+          into, through, and out of Pierce County's homelessness response system: who enters, who's active, who
           exits and to where, how much shelter and housing capacity exists to meet the need, and how long people
           experience homelessness.
         </p>
